@@ -1,0 +1,62 @@
+<html>
+<head>
+        <title>
+                Update Post Mise à Jour
+        </title>
+</head>
+<body style="text-align:center;">
+        <h1 style="color:blue;">
+                Welcome Galou
+        </h1>
+        <h4>
+                On prie pour que cela marche
+        </h4>
+        <?php
+
+                if(isset($_POST['button1'])) {
+                        $file = 'test.php';
+                        $newfile = 'example.txt.bak';
+                        echo "La copie est faite";
+
+                        if (!copy($file, $newfile)) {
+                        echo "La copie $file du fichier a échoué...\n";
+                        }
+
+                }
+                if(isset($_POST['button2'])) {
+
+                        $lines1 = file( '/var/www/html/EmailService.php', FILE_IGNORE_NEW_LINES );
+                        $lines2 = file( '/var/www/html/EmailServicecopy.php', FILE_IGNORE_NEW_LINES );
+
+                        $result = array_diff( $lines1, $lines2 );
+                        print_r( $result );
+                }
+                if(isset($_POST['button3'])) {
+
+                        $filename = "EmailService.php";
+                        $fichier = fopen('/var/www/html/EmailService.php','c+b');
+                        #$fichier = fopen($_SERVER['DOCUMENT_ROOT'].$filename,'c,b');
+                        #$fichier = fopen($filename, 'c+b');
+                        $texte = fread($fichier, 5454);
+                        $filename2 = "/var/www/html/motif.txt";
+                        $fichier2 = fopen($filename2, 'r');
+                        $texte .= fread($fichier2, filesize($filename2));
+                        $texte .= fread($fichier, filesize($filename));
+                        fseek($fichier, 0);
+                        fwrite($fichier, $texte);
+                        fclose($fichier);
+                        fclose($fichier2);
+                        #print_r($texte);
+                echo "Update effectué";
+                }
+        ?>
+        <form method="post" action="/modules_v4/correction/resources/views/page.phtml">
+
+                <input type="submit" name="button1" value="Copie de EmailService"/>
+
+                <input type="submit" name="button2" value="Check des fichiers"/>
+
+                <input type="submit" name="button3" value="Update du script"/>
+        </form>
+</body>
+</html>
